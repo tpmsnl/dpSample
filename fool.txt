@@ -1,0 +1,546 @@
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+//import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+
+@Controller
+public class AppController {
+
+    // @GetMapping(value="path")
+    // public SomeData getMethodName(@RequestParam String param) {
+    //     return new SomeData();
+    // }
+    
+    @GetMapping("/home")
+    public String getHome() {
+        return "home";
+    }
+
+    @GetMapping("/ct")
+    public String getCt() {
+        return "ct";
+    }
+
+    @GetMapping("/ctdb")
+    public String getctdb() {
+        return "ctdb";
+    }
+
+    @PostMapping("/ctdb")
+    public String getctdbH() {
+        return "ctdb";
+    }
+
+    @GetMapping("/myprof")
+    public String getprof() {
+        return "myprof";
+    }
+}
+
+
+---------------------------------
+
+
+ct.html
+
+<!DOCTYPE html>
+	<head><title>Citizen - DigiPal</title>
+		<link rel="stylesheet" th:href="styl.css">
+		<script>
+			function check() {
+				document.getElementById("check").showModal();
+			}
+			function dlogOff() {
+				document.getElementById("check").close();
+			}
+		</script>
+	</head>
+	<body>
+		<div id="top">
+			<table>
+				<tr>
+					<td id="logo">DigiPal</td>
+				</tr>
+			</table>
+		</div>
+		<div id="info"><h3>Citizen / LHC Operator Portal</h3></div>
+		
+    <table>
+		<tr>
+			<td>
+				<label for="type">I am:</label>
+				<select name="type" id="type">
+					<option value="" selected>Select type</option>
+					<option value="ct">Citizen</option>
+					<option value="lo">Operator</option>
+				</select>
+			</td>
+		</tr>
+        <tr>
+            <td>
+                <input type="text" placeholder="Enter mobile">
+                <input type="button" value="Get OTP">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" placeholder="Enter OTP">
+                <input type="button" value="Verify OTP">
+            </td>
+        </tr>
+    </table>
+    <form th:action="@{ctdb}" method="post">
+        <table>
+            <tr>
+                <td>
+                    <input type="text" placeholder="Enter password">
+					<input type="submit" value="Continue">
+                </td>
+            </tr>
+        </table>
+    </form>
+	</body>
+</html>
+
+
+-----------------------------------
+
+
+home.html
+
+<!DOCTYPE html>
+	<head><title>Home - DigiPal</title>
+		<link rel="stylesheet" th:href="styl.css">
+		<script>
+			function check() {
+				document.getElementById("check").showModal();
+			}
+			function dlogOff() {
+				document.getElementById("check").close();
+			}
+		</script>
+	</head>
+	<body>
+		<div id="top">
+			<table>
+				<tr>
+					<td id="logo">DigiPal</td>
+					<td id="login">Login</td>
+				</tr>
+			</table>
+		</div>
+		<div class="apply">
+            <div class="exist">
+                <details>
+                    <summary><b>Citizen / LHC Operator</b></summary>
+                    <p>Click <a href="#check" onclick="check()" >here</a> for application status</p>
+                    <p>Click <a th:href="@{ct}">here</a> for application portal</p>
+                </details>
+            </div>
+            <div class="new">
+                <details>
+                    <summary><b>LHC Processor</b></summary>
+                    <p>Click <a href="#ok">here</a> to login</p>
+                    <p>Click <a href="#ok">here</a> to register</p>
+                </details>
+            </div>
+        </div>
+		<dialog id="check">
+			<div onclick="dlogOff()" id="dlogoff">Close</div>
+			<div id="chk">
+				<table id="appchk">
+					<th colspan="2">Check application status</th>
+					<tbody>
+						<tr>
+							<td><input id="appGet" type="text" placeholder="Enter application ID"></td>
+							<td><input type="button" value="Check"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</dialog>
+	</body>
+</html>
+
+
+---------------------------
+
+
+ctdb.html
+
+
+<!DOCTYPE html>
+	<head><title>Dashboard - DigiPal</title>
+		
+		<link rel="stylesheet" th:href="@{styl.css}">
+		
+		<script>
+			function check() {
+				document.getElementById("check").showModal();
+			}
+			function dlogOff() {
+				document.getElementById("check").close();
+			}
+		</script>
+	</head>
+	<body>
+		<div id="top">
+			<table>
+				<tr>
+					<td id="logo">DigiPal</td>
+					<td id="user">
+						<a th:href="@{home}">Log Out</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="content">
+			<div id="info"><h3>Citizen / LHC Operator Dashboard</h3></div>
+
+        <div id="act">
+			<table>
+				<div id="lt">
+				   <ul>
+					<li><a th:href="@{/myprof}" target="ok">My Profile</a></li>
+					<li>My Applications</li>
+					<li>My Settings</li>
+					<li>Manage Heirs</li>
+				   </ul>
+				</div>
+				<div id="rt">
+					<iframe width="100%" height="auto" name="ok"></iframe>
+				</div>
+			</table>
+		</div>
+		</div>
+		
+		
+
+	</body>
+</html>
+
+
+
+---------------------------
+
+
+
+* {
+    font-family: sans-serif;
+    font-size: large;
+}
+
+details[open] {
+    background-color: white;
+    padding: 0.5em;
+}
+
+details,
+details summary {
+    border: 0.5px solid #aaa;
+    border-radius: 3px;
+    padding: 0.5em;
+}
+
+details:hover,
+details[open] summary {
+    background-color: white;
+    cursor: pointer;
+    padding: 0.5em;
+    border-bottom: 1px solid #aaa;
+}
+
+summary {
+    margin: -0.5em;
+    padding: 0.5em;
+    text-align: center;
+}
+
+div#top {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    border-bottom: 0.5px solid black;
+}
+
+body {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+td {
+    border: 0.5px solid white;
+}
+
+table,
+div.apply {
+    padding: 8px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 600px;
+}
+
+td#login {
+    float: right;
+}
+
+table#appchk {
+    width: 250px;
+}
+
+p {
+    padding: 8px 8px 0px;
+    width: auto;
+}
+
+div.head,
+div.apply {
+    padding: 5%;
+}
+
+div#ct {
+    float: left;
+    width: 49%;
+}
+
+div#lo {
+    float: right;
+    width: 49%;
+    text-align: right;
+}
+
+h3 {
+    text-align: center;
+}
+
+div#apply {
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+th,
+h4 {
+    text-align: left;
+}
+
+tr {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#appGet {
+    width: auto;
+}
+
+div#ct,
+div#lo {
+    display: inline-block;
+}
+
+:modal {
+    border: 1px solid;
+    box-shadow: 0px -1px 80px 20px grey;
+}
+
+div#dlogoff {
+    float: right;
+    cursor: pointer;
+    font-size: small;
+}
+
+details[open] {
+    background-color: white;
+    padding: 0.5em;
+}
+
+details,
+details summary {
+    border: 0.5px solid #aaa;
+    border-radius: 3px;
+    padding: 0.5em;
+}
+
+details:hover,
+details[open] summary {
+    background-color: white;
+    cursor: pointer;
+    padding: 0.5em;
+    border-bottom: 1px solid #aaa;
+}
+
+summary {
+    margin: -0.5em;
+    padding: 0.5em;
+    text-align: center;
+}
+
+div#top {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    border-bottom: 0.5px solid black;
+}
+
+body {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+td {
+    border: 0.5px solid white;
+}
+
+table,
+div.apply {
+    padding: 8px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 600px;
+}
+
+td#login {
+    float: right;
+}
+
+table#appchk {
+    width: 250px;
+}
+
+p {
+    padding: 8px 8px 0px;
+    width: auto;
+}
+
+div.head,
+div.apply {
+    padding: 5%;
+}
+
+div#main {
+    float: left;
+    width: auto;
+}
+
+div#others {
+    float: right;
+    width: auto;
+    text-align: right;
+}
+
+div.exist,
+div#faq {
+    float: left;
+    width: 49%;
+}
+
+div.new,
+div#call {
+    float: right;
+    width: 49%;
+    margin: 0 0 auto
+}
+
+th {
+    text-align: left;
+}
+
+tr {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#appGet {
+    width: auto;
+}
+
+:modal {
+    border: 1px solid;
+    box-shadow: 0px -1px 80px 20px grey;
+}
+
+div#dlogoff {
+    float: right;
+    cursor: pointer;
+    font-size: small;
+}
+
+details[open] {background-color: white; padding: 0.5em;}
+			details, details summary {border: 0.5px solid #aaa;  border-radius: 3px; padding: 0.5em;}
+			details:hover, details[open] summary { background-color: white; cursor:pointer; padding: 0.5em; border-bottom: 1px solid #aaa;}
+			summary { margin: -0.5em; padding: 0.5em; text-align: center;
+			}
+			div#top {
+				border: 0; margin: 0; padding: 0; border-bottom: 0.5px solid black;
+			}
+			body {
+				border: 0; margin: 0; padding: 0; 
+			}
+			td {
+				border: 0.5px solid white;
+			}
+			
+			table, div.apply {
+				padding: 8px; margin-left: auto; margin-right: auto;
+				width: 600px;
+			}
+			td#login {
+				float: right;
+			}
+			table#appchk {
+				width: 250px;
+			}
+			p { padding: 8px 8px 0px; width: auto; }
+
+			div.head, div.apply {padding: 5%;}
+			div#lt {float:left; width: 22%;}
+			div#rt {width: 77%; text-align: right; }
+			h3 {text-align: center;}
+            div#apply, div#act {
+                width: 600px; margin-left: auto; margin-right: auto; 
+            }
+
+		th, h4 {
+			text-align: left;
+		}	
+		
+		tr {
+			padding-top: 5px; padding-bottom: 5px;
+		}
+
+		#appGet {
+			width: auto;
+		}
+        div#rt, div#lt {
+            display:inline-block;
+        }
+		li { list-style-type: none;  border: 0.2px solid}
+		ul { padding: 0; }
+		div#content { width: 600px; border: 0.5px solid; 
+			margin-left: auto; margin-right: auto; 
+		}
+		:modal {
+			border: 1px solid;
+			box-shadow: 0px -1px 80px 20px grey; }
+
+		div#dlogoff {
+			float: right; cursor: pointer; font-size: small;
+		}
+		#user { float: right }
+		div#rt { text-align: center; margin-left: auto; margin-right: auto;   flex: 1.5; }
+		div#lt { float: left; padding-left: 0; flex: 0.5;
+		}
+		
+		
+----------------------
+
+
+application properties
+
+spring.datasource.url=jdbc:mysql://localhost:3306/Citizen
+spring.datasource.username=root
+spring.datasource.password=hello
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.show-sql=true
