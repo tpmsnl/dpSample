@@ -6,7 +6,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.annotation.Nonnull;
 import org.slf4j.*;
 import org.springframework.core.io.ClassPathResource;
-
 import java.io.*;
 import java.time.Duration;
 import java.util.*;
@@ -15,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class SR1 {
 
-    private static final int ROOMS = 10;
+    private static final int ROOMS = 30;
     private static final Logger LOGGER = LoggerFactory.getLogger(SR1.class);
     private static final ObjectMapper om = createObjectMapper();
 
@@ -42,26 +41,21 @@ public class SR1 {
                 req.getOrigin() == null || req.getOrigin().trim().isEmpty();
         final Predicate<Req> isP2 = hubTurn.or(hubTurnTime);
 
-        // 2. Efficiently split P1 and P2 in one pass (Fixes inefficient filtering)
         Map<Boolean, List<Req>> splitReqs = requests.stream()
                 .collect(Collectors.partitioningBy(isP2));
 
         List<Req> p2Requests = splitReqs.get(true);
         List<Req> p1Requests = splitReqs.get(false);
 
-        // 3. Set Priorities
         p2Requests.forEach(x -> x.setPrior(2));
         p1Requests.forEach(x -> x.setPrior(1));
 
         LOGGER.info("P1 Size: {}, P2 Size: {}", p1Requests.size(), p2Requests.size());
 
-        // 4. Initialize Rooms
         Deque<Integer> freeRooms = new ArrayDeque<>();
-        for (int i = 1; i <= ROOMS; i++) {
+        for (int i = 1; i <= ROOMS; i++)
             freeRooms.add(i);
-        }
 
-        // 5. Assign P1
         Set<Assignment> assigned = assignP1(p1Requests, freeRooms);
 
         // 6. Handle P1 Rejections (Downgrade to P2)
@@ -86,7 +80,6 @@ public class SR1 {
         for (Req r : requests) {
             if (!freeRooms.isEmpty()) {
                 int room = freeRooms.removeFirst();
-                // FIX: Standardized Constructor order (Status, ReqID, RoomID)
                 assigned.add(new Assignment(P1_ASSIGNED, r.getId(), room));
             } else {
                 assigned.add(new Assignment(WAITLIST, r.getId(), null));
@@ -101,8 +94,6 @@ public class SR1 {
      */
     public static List<Req> processP1Rejections(List<Req> requests, Set<Assignment> assigned, Deque<Integer> freeRooms) {
         List<Req> downgradedRequests = new ArrayList<>();
-
-        // FIX: Removed freeRooms.clear(). We want to KEEP rooms that weren't used by P1.
 
         Map<Integer, Req> rejectedReqMap = requests.stream()
                 .filter(Req::isRejectP1) // Assuming isRejectP1 is a boolean flag in Req
